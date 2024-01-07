@@ -20,7 +20,7 @@ let modal = null
 
 // Function to find the column containing a task
 function findColumnContainingTask(task) {
-  for (const board of boardData.boards) {
+  for (const board of currentData.boards) {
     for (const column of board.columns) {
       if (column.tasks.includes(task)) {
         return column
@@ -32,7 +32,7 @@ function findColumnContainingTask(task) {
 
 // Function to find the board containing a task
 function findBoardContainingTask(task) {
-  for (const board of boardData.boards) {
+  for (const board of currentData.boards) {
     for (const column of board.columns) {
       if (column.tasks.includes(task)) {
         return board
@@ -68,7 +68,7 @@ function deleteInput(button) {
   }
 
   // Optionally, update the board when an input is deleted
-  renderBoard(boardData.selectedBoard)
+  renderBoard(currentData.selectedBoard)
 }
 
 function deleteInput(inputElement) {
@@ -97,7 +97,7 @@ function addNewToInputs(inputWrapper) {
     })
 
     updateModalArrays(inputWrapper)
-    renderBoard(boardData.selectedBoard)
+    renderBoard(currentData.selectedBoard)
   } else {
     console.error('Input wrapper is null or undefined.')
   }
@@ -205,7 +205,7 @@ editBoardButton.addEventListener('click', (e) => {
 
   if (!hasError) {
     // Call the editBoard function with the board names and column names
-    const selectedBoardId = boardData.selectedBoard
+    const selectedBoardId = currentData.selectedBoard
     modalInputs.forEach(({ boardName, columnNames }) => {
       editBoard(selectedBoardId, boardName, columnNames)
     })
@@ -213,15 +213,15 @@ editBoardButton.addEventListener('click', (e) => {
     // Reset modalInputs and errorMessage
     modalInputs = errorMessage = null
 
-    renderBoard(boardData.selectedBoard)
+    renderBoard(currentData.selectedBoard)
     // Close the modal
     closeModal('edit-board-modal')
   }
 })
 
 function editBoard(selectedBoardId, newBoardName, newColumnNames) {
-  // Find the index of the selected board in the boardData array
-  const boardIndex = boardData.boards.findIndex(
+  // Find the index of the selected board in the currentData array
+  const boardIndex = currentData.boards.findIndex(
     (board) => board.id === selectedBoardId,
   )
 
@@ -237,10 +237,10 @@ function editBoard(selectedBoardId, newBoardName, newColumnNames) {
   // Check if the board is found
   if (boardIndex !== -1) {
     // Update board name
-    boardData.boards[boardIndex].name = newBoardName
+    currentData.boards[boardIndex].name = newBoardName
 
     // Update existing columns
-    const existingColumns = boardData.boards[boardIndex].columns
+    const existingColumns = currentData.boards[boardIndex].columns
     existingColumns.forEach((column, index) => {
       if (index < newColumnNames.length) {
         column.name = newColumnNames[index]
@@ -254,7 +254,7 @@ function editBoard(selectedBoardId, newBoardName, newColumnNames) {
       index++
     ) {
       const newColumn = { name: newColumnNames[index], tasks: [] }
-      boardData.boards[boardIndex].columns.push(newColumn)
+      currentData.boards[boardIndex].columns.push(newColumn)
     }
 
     // Check for deleted columns
@@ -262,13 +262,13 @@ function editBoard(selectedBoardId, newBoardName, newColumnNames) {
       const deletedColumns = existingColumns.slice(newColumnNames.length)
       deletedColumns.forEach((deletedColumn) => {
         // Your logic to handle deleted columns
-        boardData.boards[boardIndex].columns = boardData.boards[
+        currentData.boards[boardIndex].columns = currentData.boards[
           boardIndex
         ].columns.filter((column) => column !== deletedColumn)
 
         console.log('Deleted Column:', deletedColumn)
 
-        renderBoard(boardData.selectedBoard)
+        renderBoard(currentData.selectedBoard)
         // Here you might want to delete tasks associated with the deleted column, etc.
       })
     }
@@ -279,8 +279,8 @@ function editBoard(selectedBoardId, newBoardName, newColumnNames) {
 
 // Function to fill the Edit Board modal with selected board data
 function fillEditBoardModal() {
-  const selectedBoard = boardData.boards.find(
-    (board) => board.id === boardData.selectedBoard,
+  const selectedBoard = currentData.boards.find(
+    (board) => board.id === currentData.selectedBoard,
   )
 
   if (selectedBoard) {
@@ -320,8 +320,8 @@ function openModal(modalId) {
     errorMessage = Array.from(modal.querySelectorAll('.input-span'))
   }
 
-  // Extract unique status values from the selected board in the boardData object
-  const statusValues = extractStatusValues(boardData, boardData.selectedBoard)
+  // Extract unique status values from the selected board in the currentData object
+  const statusValues = extractStatusValues(currentData, currentData.selectedBoard)
 
   // Populate dropdown options dynamically using the generateStatusToDropdown function
   dropdownOptions = generateDropdownOptions(statusValues)
@@ -367,7 +367,7 @@ function openModal(modalId) {
 
   // Delay the call to renderBoard until after the modal is opened
   setTimeout(() => {
-    renderBoard(boardData.selectedBoard)
+    renderBoard(currentData.selectedBoard)
   }, 0)
 
   if (modalId === 'edit-board-modal') {
@@ -375,11 +375,11 @@ function openModal(modalId) {
   }
 }
 
-// Function to extract unique status values from the selected board columns in the boardData object
-function extractStatusValues(boardData, selectedBoard) {
+// Function to extract unique status values from the selected board columns in the currentData object
+function extractStatusValues(currentData, selectedBoard) {
   const uniqueStatusValues = new Set()
 
-  const board = boardData.boards.find((board) => board.id === selectedBoard)
+  const board = currentData.boards.find((board) => board.id === selectedBoard)
   if (board) {
     board.columns.forEach((column) => {
       uniqueStatusValues.add(column.name) // Add column name to the set
@@ -431,11 +431,11 @@ function addNewBoard(boardName, boardColumns) {
 
   // Add the new board to your application or perform any necessary actions
   // For example, you might have an array of boards:
-  boardData.boards.push(newBoard)
+  currentData.boards.push(newBoard)
 
   // Update your UI or trigger any necessary updates
   closeModal('add-new-board')
-  renderBoard(boardData.selectedBoard) // Call renderBoard after adding a new board
+  renderBoard(currentData.selectedBoard) // Call renderBoard after adding a new board
 }
 const cancelButton = document.querySelector('.cancel')
 
@@ -449,7 +449,7 @@ const deleteBoardButton = document.querySelector('.delete-button')
 
 deleteBoardButton.addEventListener('click', (e) => {
   e.preventDefault()
-  deleteBoard(boardData.selectedBoard)
+  deleteBoard(currentData.selectedBoard)
   closeModal('delete-board-modal')
 })
 
@@ -457,16 +457,16 @@ deleteBoardButton.addEventListener('click', (e) => {
 function deleteBoard(boardId) {
   // Implement your logic to delete the board by ID
   // For example:
-  const indexToDelete = boardData.boards.findIndex(
+  const indexToDelete = currentData.boards.findIndex(
     (board) => board.id === boardId,
   )
   if (indexToDelete !== -1) {
-    boardData.boards.splice(indexToDelete, 1)
+    currentData.boards.splice(indexToDelete, 1)
     // You might also want to handle other related data structures or UI updates here
   }
 
   // Update your UI or trigger any necessary updates
-  renderBoard(boardData.selectedBoard) // Call renderBoard after deleting a board
+  renderBoard(currentData.selectedBoard) // Call renderBoard after deleting a board
 }
 
 // Example usage when deleting a board (replace 'boardIdToDelete' with the actual ID):
@@ -518,7 +518,7 @@ createNewBoard.addEventListener('click', (e) => {
     // Reset modalInputs and errorMessage
     modalInputs = errorMessage = null
 
-    renderBoard(boardData.selectedBoard)
+    renderBoard(currentData.selectedBoard)
     // Close the modal
     closeModal('add-board-modal')
   }
@@ -660,11 +660,11 @@ createNewTask.addEventListener('click', (e) => {
   }
 
   // Capture the selected status from dropdown options with class '.dBtn-text'
-  const boardIndex = boardData.boards.findIndex(
-    (board) => board.id === boardData.selectedBoard,
+  const boardIndex = currentData.boards.findIndex(
+    (board) => board.id === currentData.selectedBoard,
   )
 
-  const dropdownOptions = boardData.boards[boardIndex].columns.map(
+  const dropdownOptions = currentData.boards[boardIndex].columns.map(
     (column) => column.name,
   )
 
@@ -701,8 +701,8 @@ function addNewTask(taskName, taskDescription, taskSubtasks, status) {
       isCompleted: false,
     })),
   }
-  const board = boardData.boards.find(
-    (board) => board.id === boardData.selectedBoard,
+  const board = currentData.boards.find(
+    (board) => board.id === currentData.selectedBoard,
   )
 
   board.columns.forEach((column) => {
@@ -711,5 +711,5 @@ function addNewTask(taskName, taskDescription, taskSubtasks, status) {
     }
   })
 
-  renderBoard(boardData.selectedBoard)
+  renderBoard(currentData.selectedBoard)
 }

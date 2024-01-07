@@ -482,10 +482,6 @@ function updateSubtaskUI(subtask) {
 
 // Assume you have a function to find a subtask by title
 function findSubtaskById(subtaskId) {
-  // Implement your logic to find the subtask by ID in your data structure
-  // For example, you can use boardData to find the subtask
-  // Replace this with your actual implementation
-
   return boardData.boards
     .flatMap((board) => board.columns)
     .flatMap((column) => column.tasks)
@@ -494,7 +490,6 @@ function findSubtaskById(subtaskId) {
 }
 
 function findTaskById(taskId) {
-  // Loop through boards to find the task with the given ID
   for (const board of boardData.boards) {
     for (const column of board.columns) {
       const task = column.tasks.find((task) => task.id === taskId)
@@ -507,8 +502,6 @@ function findTaskById(taskId) {
 }
 
 function generateUniqueIdFromTitle(title) {
-  // Use a hash function or any unique ID generation method based on the title
-  // For simplicity, let's use a basic hash function for illustration
   const hash = title
     .split('')
     .reduce((acc, char) => (acc * 31 + char.charCodeAt(0)) | 0, 0)
