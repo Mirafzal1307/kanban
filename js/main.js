@@ -60,12 +60,12 @@ const getDataFromJsonFile = async () => {
     const isBoardRendered = document.getElementById(board.id) !== null
   
     // Update the board list (assuming boardList is a valid reference)
-    boardList.innerHTML = generateKanbanBoardNames(boardData)
+    boardList.innerHTML = generateBoardNames(boardData)
   
     // Render the selected board only if it's not already rendered
     if (!isBoardRendered) {
       // Assuming playGround is a valid reference
-      playGround.innerHTML = generateKanbanBoard(board)
+      playGround.innerHTML = generateBoard(board)
   
       playGround.appendChild(createNewColumnElement())
   
@@ -551,7 +551,7 @@ const getDataFromJsonFile = async () => {
     `
   }
   
-  function generateKanbanBoardName(board) {
+  function generateBoardName(board) {
     return `
       <li>
         <button 
@@ -566,13 +566,13 @@ const getDataFromJsonFile = async () => {
     `
   }
   
-  function generateKanbanBoardNames(boardData) {
+  function generateBoardNames(boardData) {
     return boardData.boards
-      .map((board) => generateKanbanBoardName(board))
+      .map((board) => generateBoardName(board))
       .join('')
   }
   
-  function generateKanbanBoard(board) {
+  function generateBoard(board) {
     if (!board || !board.columns) {
       console.error('Invalid board data:', board)
       return '' // Return an empty string or handle the error appropriately
@@ -591,7 +591,7 @@ const getDataFromJsonFile = async () => {
     }
   })
   
-  boardList.innerHTML = generateKanbanBoardNames(boardData)
+  boardList.innerHTML = generateBoardNames(boardData)
   
   if (boardData && boardData.boards.length > 0) {
     const initialBoardId = boardData.boards[0].id
@@ -691,7 +691,7 @@ const getDataFromJsonFile = async () => {
   
   function fetchData() {
     try {
-      const jsonData = localStorage.getItem('kanban')
+      const jsonData = localStorage.getItem('data')
       return jsonData ? JSON.parse(jsonData) : null
     } catch (error) {
       console.error('Error fetching data from localStorage:', error)
@@ -702,7 +702,7 @@ const getDataFromJsonFile = async () => {
   function setData(data) {
     try {
       const jsonData = JSON.stringify(data)
-      localStorage.setItem('kanban', jsonData)
+      localStorage.setItem('data', jsonData)
       console.log('Data successfully set in localStorage.')
     } catch (error) {
       console.error('Error setting data in localStorage:', error)
