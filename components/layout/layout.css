@@ -1,0 +1,82 @@
+.sidebarOpenerIcon {
+  transform: rotate(0deg);
+  transition: all 0.3s ease;
+  transform: scale(1.3);
+}
+.sidebarOpenerIcon:hover {
+  transform: scale(1.3);
+}
+.sidebarOpenerIcon.rotated {
+  transform: rotate(-180deg) scale(1.3);
+  /* transition: all 0.3s ease; */
+}
+/* SIDEBAR */
+.sidebar {
+  transition: all 0.3s ease;
+  overflow: hidden;
+  transform: translate(0);
+  width: max-content;
+  max-height: 90vh;
+  z-index: 0;
+}
+.sidebar.active {
+  display: block;
+  position: absolute;
+  z-index: 1000;
+  top: 20px;
+  left: 20px;
+  border-radius: 10px;
+}
+.sidebar.disAppearNow {
+  display: none;
+}
+
+/*  */
+.sidebar-revealer {
+  transform: translate(-100%);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+.sidebar-revealer.appear {
+  transform: translate(0);
+}
+
+/* BARDS */
+/* .board__item{
+  margin-bottom: 6px;
+  min-width: 240px;
+}
+.board__link{
+  min-width: 230px;
+  margin-right: 24px;
+} */
+.board__link.active {
+  background-color: #635fc7;
+  color: #fff;
+  width: 100%;
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
+}
+
+/* Blocker */
+.blocker {
+  position: absolute;
+  display: none;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  right: 0;
+  background-color: black;
+  z-index: 1;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+.blocker.active {
+  display: block;
+  opacity: 0.5;
+}
+/* SIDEBAR TOGGLER */
+/* .sidebar-toggler{
+
+} */
+

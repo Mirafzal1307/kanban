@@ -1,0 +1,25 @@
+.checkbox-icon {
+  font-size: 10px;
+  z-index: 10;
+}
+
+.checkbox-input:checked {
+  border-radius: 3px;
+}
+.chechbox-content:hover {
+  border-radius: 4px;
+  background: var(--Main-Purple, #625fc750);
+}
+
+.checkbox-input:checked + label {
+  color: var(--White, #fff);
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  text-decoration-line: strikethrough;
+  opacity: 50%;
+}
+.checkbox-input:checked + .chechbox-content {
+  border-radius: 4px;
+  background: var(--very-dark-grey-dark-bg, #20212c);
+}

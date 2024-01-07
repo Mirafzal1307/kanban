@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('../icomoon/style.css');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #635fc7 #ffffff;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #383672;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #635fc7;
+  border-radius: 10px;
+}
+
+body.active {
+  overflow-y: hidden;
+}
+
+#newColumn {
+  justify-content: center;
+}
+
+.card {
+  border: 2px solid transparent;
+}
+.card:hover .card__title {
+  color: #635fc7;
+  transition: 0.2s ease-in-out;
+}
+
+.dragover {
+  border: 2px solid #635fc7;
+  opacity: 50%;
+  animation: zoomInZoomOut .4s;
+}
+
+@keyframes zoomInZoomOut {
+  0% {
+    transform: scale(0.9, 0.9);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+.theme-light {
+  --bg-page-color: #f4f7fd;
+  --bg-content-color: #fff;
+  --text-color: #000112;
+  --lines-color: #e4ebfa;
+  --gray-color: #828fa3;
+  --btn-light-color: rgba(99, 95, 199, 0.1);
+}
+
+.theme-dark {
+  --bg-page-color: #20212c;
+  --bg-content-color: #2b2c37;
+  --text-color: #fff;
+  --lines-color: #3e3f4e;
+  --gray-color: #fff;
+  --btn-light-color: rgba(255, 255, 255, 1);
+}
+
+:root {
+  --primary-color: #635fc7;
+  --primary-light-color: #a7a4ff;
+  --primary-disabled-color: #39395b;
+  --danger-color: #ea5555;
+  --input-border: rgba(130, 143, 163, 0.25);
+  --danger-light-color: #ff9898;
+  --btn-hover-color: rgba(99, 95, 199, 0.25);
+}
+
+/* Apply Tailwind styles based on the theme class */
+[data-theme='light'] {
+  @apply theme-light;
+}
+
+[data-theme='dark'] {
+  @apply theme-dark;
+}

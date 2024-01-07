@@ -1,0 +1,19 @@
+.dropdown-menu.active .dropdown-options {
+  display: block;
+}
+
+.dropdown-btn .dropdown-sign svg {
+  transition: all 0.3s ease-in;
+}
+
+.dropdown-menu.active .dropdown-btn .dropdown-sign svg {
+  transform: rotate(-180deg);
+}
+
+.dropdown-options {
+  box-shadow: 0px 10px 20px 0px rgba(54, 78, 126, 0.25);
+}
+
+.dropdown-option:nth-child(3) {
+  margin-bottom: 0;
+}

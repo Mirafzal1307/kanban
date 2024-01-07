@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Input</title>
+    <link rel="stylesheet" href="./input.css" />
+    <link rel="stylesheet" href="../../assets/css/normalize.css" />
+    <link rel="stylesheet" href="../../assets/css/variables.css" />
+    <link rel="stylesheet" href="../../assets/css/style.css" />
+    <link rel="stylesheet" href="../../../assets/icomoon/style.css" />
+    <link rel="stylesheet" href="../../../assets/css/output.css" />
+  </head>
+  <body>
+    <div class="form-wrapper">
+      <form class="flex flex-col">
+        <!-- Title -->
+        <div class="flex flex-col mb-6">
+          <label
+            class="label-input relative m-0 flex flex-col gap-2 text-[#828FA3] font-bold text-[12px] leading-normal"
+          >
+            Title
+            <input
+              class="block bg-transparent w-full px-4 py-2 rounded text-color outline-none cursor-pointer font-medium text-[13px] leading-[23px] border border-input-color focus:border-primary-color active:transition duration-200 active:ease-in"
+              type="text"
+              placeholder="e.g. Take coffee break"
+              required
+            />
+            <span
+              class="input-span hidden absolute top-[50%] right-4 text-danger-color font-medium leading-[23px] not-italic text-[13px]"
+              >Can’t be empty</span
+            >
+          </label>
+        </div>
+
+        <!-- Subtasks -->
+        <div class="flex flex-col">
+          <label
+            class="form-label flex flex-col gap-2 text-[#828FA3] font-bold text-[12px] leading-normal"
+          >
+            Subtasks
+            <div class="flex gap-4 relative">
+              <input
+                class="block bg-transparent w-full px-4 py-2 rounded text-color outline-none cursor-pointer font-medium text-[13px] leading-[23px] border border-input-color focus:border-primary-color active:transition duration-200 active:ease-in"
+                type="text"
+                placeholder="e.g. Take coffee break"
+              />
+              <button type="button" class="close-btn">
+                <i
+                  class="icon-close top-4 right-4 cursor-pointer text-color hover:text-danger-color duration-150 active:text-danger-light-color"
+                ></i>
+              </button>
+            </div>
+            <span
+              class="input-span hidden absolute top-[55%] right-12 text-[#ea5555] font-medium leading-[23px] not-italic font-plus-jakarta-sans text-[13px]"
+              >Can’t be empty</span
+            >
+          </label>
+        </div>
+      </form>
+    </div>
+    <script src="./input.js"></script>
+  </body>
+</html>

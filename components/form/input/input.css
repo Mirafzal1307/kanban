@@ -1,0 +1,15 @@
+.form-wrapper {
+  margin: 100px 130px;
+  display: flex;
+  flex-direction: column;
+}
+
+input.error {
+  border: 1px solid #ea5555;
+  background-color: transparent;
+  border-radius: 4px;
+}
+
+.label-input {
+  margin: 0;
+}

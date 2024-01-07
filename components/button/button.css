@@ -1,0 +1,19 @@
+.btn-disabled:disabled {
+  cursor: none;
+  pointer-events: none;
+  opacity: 0.2;
+}
+
+.btn:hover {
+  filter: brightness(95%);
+}
+
+.btn:active {
+  filter: brightness(100%);
+  transform: scale(0.9);
+}
+
+.btn .active {
+  background-color: #635fc7;
+  color: #fff;
+}

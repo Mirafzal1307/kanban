@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en" class="w-full h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/assets/css/variables.css" />
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="stylesheet" href="/assets/css/output.css" />
+    <!-- <link rel="stylesheet" href="layout.css"> -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="w-full h-full md:w-full">
+    <!-- HEADER -->
+    <header class="container flex items-center w-full px-6">
+      <!-- HEADER LOGO -->
+      <div
+        class="flex text-black font-bold md:border-r-2 border-gray-300 hover:opacity-80"
+      >
+        <a class="cursor-pointer md:flex md:mr-6 lg:mr-8" href="header.html">
+          <svg
+            class="my-5 ml-6 mr-4 md:my-7"
+            width="24"
+            height="25"
+            viewBox="0 0 24 25"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect width="6" height="25" rx="2" fill="#635FC7" />
+            <rect
+              opacity="0.75"
+              x="9"
+              width="6"
+              height="25"
+              rx="2"
+              fill="#635FC7"
+            />
+            <rect
+              opacity="0.5"
+              x="18"
+              width="6"
+              height="25"
+              rx="2"
+              fill="#635FC7"
+            />
+          </svg>
+          <span class="hidden text-2xl md:block md:py-7">Kanban</span>
+        </a>
+      </div>
+      <!-- Name of current Board -->
+      <div class="flex w-full justify-between items-center">
+        <div class="flex place-items-center cursor-pointer hover:opacity-80">
+          <span
+            class="currentBoard text-black text-2xl font-bold flex-shrink-0 md:ml-8"
+            >Platform Launch</span
+          >
+          <svg
+            class="ml-2 inline-block md:hidden"
+            width="9"
+            height="7"
+            viewBox="0 0 9 7"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M1 1L5 5L9 1" stroke="#635FC7" stroke-width="2" />
+          </svg>
+        </div>
+
+        <div class="flex items-center">
+          <!-- ADD NEW TASK BUTTON -->
+          <button
+            role="button"
+            class="px-3 py-1 mr-6 bg-purple-500 rounded-md flex flex-shrink-0 inline-block cursor-pointer text-white font-bold"
+          >
+            + <span class="hidden md:block">Add New Task</span>
+          </button>
+          <!-- TRIPLE DOTS -->
+          <div class="cursor-pointer">
+            <svg
+              width="4"
+              height="16"
+              viewBox="0 0 4 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="1.84615" cy="1.84615" r="1.84615" fill="#828FA3" />
+              <circle cx="1.84615" cy="8.00045" r="1.84615" fill="#828FA3" />
+              <circle cx="1.84615" cy="14.1538" r="1.84615" fill="#828FA3" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- JAVASCRIPT LINKS -->
+    <script src="/js/main.js"></script>
+    <script src="/components/header/header.js"></script>
+    <script src="/components/sidebar/sidebar.js"></script>
+    <script src="layout.js"></script>
+  </body>
+</html>
