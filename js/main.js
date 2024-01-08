@@ -24,9 +24,12 @@ function setDataToStorage(data) {
   }
 }
 
+let reloadFlag = Boolean
+
 function getDataFromStorage() {
   try {
     const jsonData = localStorage.getItem('data')
+    !jsonData ? (reloadFlag = true) : false
     return jsonData ? JSON.parse(jsonData) : null
   } catch (error) {
     console.log('Error:', error)
@@ -34,8 +37,14 @@ function getDataFromStorage() {
   }
 }
 
-const currentData = getDataFromStorage()
+function reloadOnce() {
+  if (reloadFlag) {
+    window.location.reload()
+    reloadFlag = false
+  }
+}
 
+const currentData = getDataFromStorage()
 
 function getBoardName(boardId) {
   const selectedBoard = currentData.boards.find((board) => board.id === boardId)
@@ -47,36 +56,15 @@ function renderBoard(boardId) {
   const numberOfCreatedBoards = document.querySelector('.numberOfCreatedBoards')
   numberOfCreatedBoards.textContent = `All boards (${currentData.boards.length})`
 
-  // Check if currentData.boards is an array
   getBoardName(boardId)
 
-  if (!Array.isArray(currentData.boards)) {
-    console.error('Invalid currentData.boards:', currentData.boards)
-    return
-  }
-
-  // If no boardId is provided, default to the first board in the array
-  if (!boardId && currentData.boards.length > 0) {
+  if (currentData.boards.length === 0) {
     boardId = currentData.boards[0].id
   }
   // Find the board by ID
   const board = currentData.boards.find((board) => board.id === boardId)
-
   currentData.selectedBoard = boardId
-
-  // Check if the board is found
-  if (!board) {
-    console.error(`Board with id ${boardId} not found.`)
-    return
-  }
-
-  // Check if board.id is defined and not null
-  if (board.id === undefined || board.id === null) {
-    console.error('Invalid board ID:', board.id)
-    return
-  }
-
-  const isBoardRendered = document.getElementById(board.id) !== null
+  const isBoardRendered = document.getElementById(board?.id)
 
   // Update the board list (assuming boardList is a valid reference)
   boardList.innerHTML = generateBoardNames(currentData)
@@ -85,8 +73,7 @@ function renderBoard(boardId) {
   if (!isBoardRendered) {
     // Assuming playGround is a valid reference
     playGround.innerHTML = generateBoard(board)
-
-    playGround.appendChild(createNewColumnElement())
+    playGround.appendChild(createNewColumnElementBtn())
 
     // Update the selected board in currentData
     currentData.selectedBoard = board.id
@@ -118,11 +105,8 @@ function renderBoard(boardId) {
   cardJS()
 }
 
-function generateUniqueId() {
-  return Date.now().toString(36)
-}
-
-function generateStatusToDropdown(status) {
+function renderStatus(status) {
+  console.log(status)
   return `
     <li class="dropdown-option cursor-pointer p-3 hover:bg-content-color duration-200">
       <span class="option-text font-medium text-[13px] leading-[23px] text-[#828FA3]">
@@ -140,7 +124,7 @@ function generateRandomColor() {
   return color
 }
 
-function generateTaskCard(task) {
+function renderTaskCard(task) {
   return `
       <div
         id="${task.id}"
@@ -153,43 +137,28 @@ function generateTaskCard(task) {
       <span class="hidden subtasks-json">${JSON.stringify(task.subtasks)}</span>
         <p class="card__title text-color capitalize">${task.title}</p>
         <p class="card__status text-slate-500">${
-          task.subtasks.filter((subtask) => !subtask.isCompleted).length
+          task.subtasks.filter((subtask) => subtask.isCompleted).length
         } of ${task.subtasks.length} substasks</p>
       </div>
     `
 }
 
 function openTaskModal(taskId) {
-  // Find the task with the given ID from currentData
   const task = findTaskById(taskId)
   let selectedBoard = currentData.selectedBoard
-
   const statusValues = extractStatusValues(currentData, selectedBoard)
-  const dropdownOptions = statusValues.map(generateStatusToDropdown).join('')
-
-  // Update the HTML content of the dropdown
+  const dropdownOptions = statusValues.map(renderStatus).join('')
   const dropdownElement = document?.querySelector('.dropdown-options')
 
   if (dropdownElement) {
     dropdownElement.innerHTML = dropdownOptions
   }
 
-  // Ensure sBtnText is properly defined here (modify as needed)
-  // const sBtnText = document.querySelector('.dBtn-text')
-
-  // Open the modal with the task data
   if (task) {
-    // Generate the modal HTML
-    const modalHtml = generateTaskModal(task, dropdownElement, statusValues)
-
-    // Open the modal with the generated HTML
+    const modalHtml = tasksModal(task, dropdownElement, statusValues)
     openModal('open-task-modal', currentData.selectedBoard)
-
-    // Update the HTML content of the task modal
     const taskModal = document.getElementById('open-task-modal')
     taskModal.innerHTML = modalHtml
-
-    // Set up the dropdown for the task modal
     setupDropdown(taskModal.querySelector('.dropdown-menu'), task)
   }
 }
@@ -229,28 +198,18 @@ function deleteTask(taskId) {
   console.warn(`Task with ID ${taskId} not found.`)
 }
 
-function populateEditModal(task) {
-  // This is a generic example, you should replace it with your actual logic
+function editModal(task) {
   const titleInput = document.getElementById('edit-task-title')
   const descriptionInput = document.getElementById('edit-task-description')
-
-  // Populate the modal inputs with task details
   titleInput.value = task.title
   descriptionInput.value = task.description
-  // ... (populate other fields as needed)
 }
 
 function editTask(taskId) {
-  // Find the task by ID
   const task = findTaskById(taskId)
-
-  // Populate the edit modal with task details
-  populateEditModal(task)
+  editModal(task)
   closeModal('open-task-modal')
-  // Open the edit modal
   openModal('edit-task-modal')
-
-  // Handle the "Save Changes" button click
   const saveChangesButton = document.getElementById('save-changes-button')
   saveChangesButton.addEventListener('click', () => {
     saveChanges(task)
@@ -258,31 +217,27 @@ function editTask(taskId) {
 }
 
 function saveChanges(task) {
-  // Get the updated values from the modal inputs
   const titleInput = document.getElementById('edit-task-title')
   const descriptionInput = document.getElementById('edit-task-description')
 
-  // Update the task in the data structure
   task.title = titleInput.value
   task.description = descriptionInput.value
-
   renderBoard(currentData.selectedBoard)
-  // Close the edit modal
   closeModal('edit-task-modal')
 }
 
-function generateTaskModal(task, dropdownElement, statusValues) {
-  // Extract task details
+function tasksModal(task, dropdownElement, statusValues) {
   const taskName = task.title
-  const taskDescription = task.description || 'No description available'
+  const taskDescription = task.description
+    ? task?.description
+    : 'No description available'
   const subtasksCount = task.subtasks.length
   const completedSubtasksCount = task.subtasks.filter(
     (subtask) => subtask.isCompleted,
   ).length
 
-  // Generate unique IDs for subtasks and update currentData
   const subtasksWithIds = task.subtasks.map((subtask) => {
-    subtask.id = generateUniqueIdFromTitle(subtask.title) // Update subtask ID in currentData
+    subtask.id = generateUniqueIdByTitle(subtask.title) // Update subtask ID in currentData
     return subtask
   })
 
@@ -310,12 +265,10 @@ function generateTaskModal(task, dropdownElement, statusValues) {
     }
   }
 
-  // Generate subtasks HTML
   const subtasksHtml = subtasksWithIds
-    .map((subtask) => generateSubtaskItem(subtask))
+    .map((subtask) => renderSubtask(subtask))
     .join('')
 
-  // Modal HTML
   const modalHtml = `
     <div class="h-full">
       <div class="flex items-center gap-4 justify-between mb-6">
@@ -356,7 +309,7 @@ function generateTaskModal(task, dropdownElement, statusValues) {
     </div>
   `
   // Get the dropdown options
-  const dropdownOptions = statusValues.map(generateStatusToDropdown).join('')
+  const dropdownOptions = statusValues.map(renderStatus).join('')
 
   // Set up the dropdown for the task modal
   const dropdownMenu = dropdownElement.querySelector('.dropdown-menu')
@@ -394,22 +347,13 @@ function updateTaskStatus(task, newStatus) {
       }
     }
   }
-
-  // Log the current state of the currentData for debugging
-  console.log('Updated currentData:', currentData)
-
-  // Render the updated board
 }
 
 function toggleSubtaskCompleted(subtaskId) {
-  // Find the corresponding subtask in the data structure
   const subtask = findSubtaskById(subtaskId)
-
-  // Toggle the isCompleted property
   if (subtask) {
     subtask.isCompleted = !subtask.isCompleted
 
-    // Find the task containing the subtask in the data structure
     const taskContainingSubtask = findTaskContainingSubtask(subtask)
 
     if (taskContainingSubtask) {
@@ -424,7 +368,6 @@ function toggleSubtaskCompleted(subtaskId) {
           findBoardContainingColumn(columnContainingTask)
 
         if (boardContainingColumn) {
-          // Update the currentData with the modified structure
           const boardIndex = currentData.boards.findIndex(
             (board) => board === boardContainingColumn,
           )
@@ -434,21 +377,14 @@ function toggleSubtaskCompleted(subtaskId) {
           const taskIndex = columnContainingTask.tasks.findIndex(
             (task) => task === taskContainingSubtask,
           )
-
           currentData.boards[boardIndex].columns[columnIndex].tasks[taskIndex] =
             taskContainingSubtask
-
-          // Update the UI
           updateSubtaskUI(subtask)
         }
       }
     }
   }
-
-  // Update the UI to reflect the new state
   updateSubtaskUI(subtask)
-
-  // Render the board to reflect the changes
   renderBoard(currentData.selectedBoard)
 }
 
@@ -488,18 +424,13 @@ function findBoardContainingColumn(column) {
   return null
 }
 
-// Update the updateSubtaskUI function
 function updateSubtaskUI(subtask) {
   const checkbox = document.getElementById(subtask.id)
-  // Update the checkbox state
   if (checkbox) {
     checkbox.checked = subtask.isCompleted
   }
-
-  // You can add additional UI updates here as needed
 }
 
-// Assume you have a function to find a subtask by title
 function findSubtaskById(subtaskId) {
   return currentData.boards
     .flatMap((board) => board.columns)
@@ -520,14 +451,14 @@ function findTaskById(taskId) {
   return null // Task not found
 }
 
-function generateUniqueIdFromTitle(title) {
+function generateUniqueIdByTitle(title) {
   const hash = title
     .split('')
     .reduce((acc, char) => (acc * 31 + char.charCodeAt(0)) | 0, 0)
   return `subtask-${hash}`
 }
 
-function generateSubtaskItem(subtask) {
+function renderSubtask(subtask) {
   // Generate HTML for each subtask
   return `
       <div class="chechbox-content flex items-center text-color p-3 gap-4 cursor-pointer relative hover:bg-[635fc740] hover:transition duration-200 active:ease-in" onclick="toggleSubtaskCompleted('${
@@ -548,8 +479,9 @@ function generateSubtaskItem(subtask) {
     `
 }
 
-function generateColumn(column) {
-  const tasksHtml = column.tasks.map((task) => generateTaskCard(task)).join('')
+// xotlik bor bu data localstoragega saalangandan keyin render qilishi kerak qaytadan
+function renderColumn(column) {
+  const tasksHtml = column.tasks.map((task) => renderTaskCard(task)).join('')
   return `
       <div class="column w-[280px] relative h-full text-color flex flex-col items-start gap-5">
         <h3 class="column__header text-[#828fa3] flex items-center gap-3">
@@ -563,7 +495,9 @@ function generateColumn(column) {
     `
 }
 
-function generateBoardName(board) {
+// xotlik bor bu data localstoragega saalangandan keyin render qilishi kerak qaytadan
+function renderBoardsName(board) {
+  console.log( board );
   return `
       <li>
         <button 
@@ -578,18 +512,24 @@ function generateBoardName(board) {
     `
 }
 
+// think about it )!
 function generateBoardNames(currentData) {
-  return currentData.boards.map((board) => generateBoardName(board)).join('')
+  return currentData.boards.map((board) => renderBoardsName(board)).join('')
 }
+
+function addBoard() {
+  
+}
+ 
+// console.log(generateBoardNames(currentData));
 
 function generateBoard(board) {
   if (!board || !board.columns) {
     console.error('Invalid board data:', board)
     return '' // Return an empty string or handle the error appropriately
   }
-
   playGround.setAttribute('board-id', `${board.id}`)
-  return board.columns.map((column) => generateColumn(column)).join('')
+  return board.columns.map((column) => renderColumn(column)).join('')
 }
 
 boardList.addEventListener('click', (event) => {
@@ -608,49 +548,32 @@ if (currentData && currentData.boards.length > 0) {
   renderBoard(initialBoardId)
 }
 
-function createNewColumnElement() {
-  // Create div element
+function createNewColumnElementBtn() {
   const divElement = document.createElement('button')
-
-  // Set class attribute
   divElement.setAttribute(
     'class',
     'toggle-modal-button w-280 new-column h-fit mt-10 flex rounded-md bg-gradient-primary cursor-pointer items-center content-center overflow-visible mb-48 bg-gradient-to-br from-[#995eb40a] to-[#723b8883]',
   )
-
-  // Set id attributeadd
   divElement.setAttribute('id', 'newColumn')
-
-  // Set modal-id attribute
   divElement.setAttribute('modal-id', 'edit-board-modal')
-
-  // Create span element
   const spanElement = document.createElement('span')
-
-  // Set class attribute for span
   spanElement.setAttribute(
     'class',
     'text-color text-center text-slate-500 capitalize text-2xl',
   )
 
-  // Create inner HTML for span
   spanElement.innerHTML =
     '<span class="text-3xl text-center">+</span> New Column'
-
-  // Append span element to div element
   divElement.appendChild(spanElement)
 
-  // Return the generated element
   return divElement
 }
 
+// think about it )!
 function generateColumnDataFromDOM() {
   const columns = []
-
-  // Assuming your columns are contained in a container with the class "column-container"
   const columnContainer = document.querySelector('#playGround')
 
-  // Iterate through each column in the container
   columnContainer
     .querySelectorAll('.column')
     .forEach((columnElement, columnIndex) => {
@@ -659,7 +582,6 @@ function generateColumnDataFromDOM() {
         tasks: [],
       }
 
-      // Iterate through each task in the column
       columnElement
         .querySelectorAll('.card')
         .forEach((taskElement, taskIndex) => {
@@ -682,7 +604,7 @@ function generateColumnDataFromDOM() {
   return columns
 }
 
-function replaceColumnsInSelectedBoardByIdInPlace(
+function renderColumnsByActiveBoard(
   currentData,
   boardId,
   newColumns,
@@ -701,10 +623,12 @@ function saveDOM() {
   const currentBoard = document
     .querySelector('#playGround')
     .getAttribute('board-id')
-  replaceColumnsInSelectedBoardByIdInPlace(
+    renderColumnsByActiveBoard(
     currentData,
     currentBoard,
     generateColumnDataFromDOM(),
   )
+
   setDataToStorage(currentData)
 }
+saveDOM()

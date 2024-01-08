@@ -321,7 +321,10 @@ function openModal(modalId) {
   }
 
   // Extract unique status values from the selected board in the currentData object
-  const statusValues = extractStatusValues(currentData, currentData.selectedBoard)
+  const statusValues = extractStatusValues(
+    currentData,
+    currentData.selectedBoard,
+  )
 
   // Populate dropdown options dynamically using the generateStatusToDropdown function
   dropdownOptions = generateDropdownOptions(statusValues)
@@ -406,20 +409,16 @@ function generateDropdownOptions(statusValues) {
 }
 
 function generateUniqueId() {
-  // Generate a random number and convert it to a hexadecimal string
-  const randomPart = Math.random().toString(16).substring(2)
-
-  // Get the current timestamp and convert it to a hexadecimal string
-  const timestampPart = new Date().getTime().toString(16)
-
-  // Combine the random and timestamp parts to create a unique ID
-  const uniqueId = `${timestampPart}-${randomPart}`
-
-  return uniqueId
+  const data = JSON.parse(localStorage.getItem('data'))
+  const lastElement = data.boards.length - 1
+  const uniqueId = +data.boards[lastElement].id + 1
+  return `${uniqueId}`
 }
 
 function addNewBoard(boardName, boardColumns) {
-  // Create a new board object with dynamic columns
+  const data = JSON.parse(localStorage.getItem('data'))
+  const newData = data
+
   const newBoard = {
     id: generateUniqueId(), // Make sure to implement this function
     name: boardName,
@@ -429,9 +428,9 @@ function addNewBoard(boardName, boardColumns) {
     })),
   }
 
-  // Add the new board to your application or perform any necessary actions
-  // For example, you might have an array of boards:
-  currentData.boards.push(newBoard)
+  newData.boards.push(newBoard)
+  localStorage.setItem('data', JSON.stringify(newData))
+  window.location.reload();
 
   // Update your UI or trigger any necessary updates
   closeModal('add-new-board')
