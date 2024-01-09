@@ -47,31 +47,32 @@ function reloadOnce() {
 const currentData = getDataFromStorage()
 
 document.addEventListener('DOMContentLoaded', function () {
-  const tripleDots = document.querySelector('.triple-dots')
-  const editDeleteList = document.querySelector('.edit-delete-list')
-  const toggleButton = document.querySelectorAll('.toggle-modal-button')
-  // Show or hide edit-delete-list on triple dots click
-  tripleDots.addEventListener('click', function (event) {
-    event.stopPropagation() // Prevents the click event from reaching the document
+  const toggleButtons = document.querySelectorAll('.toggle-modal-button')
+  const tripleDots = document.querySelector(".triple-dots");
+  const editDeleteList = document.querySelector(".edit-delete-list");
 
-    editDeleteList.classList.toggle('active')
-  })
+  // Show or hide edit-delete-list on triple dots click
+  tripleDots.addEventListener("click", function (event) {
+    event.stopPropagation(); // Prevents the click event from reaching the document
+    editDeleteList.classList.toggle("active");
+  });
 
   // Hide edit-delete-list when clicking outside of it
-  document.addEventListener('click', function () {
-    editDeleteList.classList.remove('active')
-  })
+  document.addEventListener("click", function () {
+    editDeleteList.classList.remove("active");
+  });
 
   // Prevent hiding when clicking inside the edit-delete-list
-  editDeleteList.addEventListener('click', function (event) {
-    event.stopPropagation()
+  editDeleteList.addEventListener("click", function (event) {
+    event.stopPropagation();
+  });
+
+  toggleButtons.forEach((btn)=>{
+    btn.addEventListener('click',()=>{
+      editDeleteList.classList.remove ('active')
+       })
   })
 
-  toggleButton.forEach((button) => {
-    button.addEventListener('click', () => {
-      editDeleteList.classList.remove('active')
-    })
-  })
 })
 
 function getBoardName(boardId) {
@@ -307,7 +308,7 @@ function tasksModal(task, dropdownElement, statusValues) {
           task.id
         }')">Delete Task</button>
       </div>
-  
+
       <div>
         <h3 class="text-color text-[18px] font-bold">${taskName}</h3>
       </div>
@@ -317,7 +318,7 @@ function tasksModal(task, dropdownElement, statusValues) {
         <div class="subtasks mt-6 flex flex-col bg-page-color">
           ${subtasksHtml}
         </div>
-  
+
         <div class="dropdown">
           <div class="dropdown-menu relative w-full">
             <div class="dropdown-btn status min-w-full w-full justify-between flex items-center px-4 py-2 rounded border focus:outline-none active:border-[#635FC7] group">
@@ -528,7 +529,7 @@ function renderBoardsName(board) {
   console.log(board)
   return `
       <li>
-        <button 
+        <button
           data-board-id="${board.id}"
           class="btn board__link w-full flex items-center gap-4 text-[#828fa3] rounded-r-full text-left font-plus-jakarta-sans font-bold cursor-pointer transition duration-200 ease-in-out text-[15px] focus:outline-none hover:bg-btn-hover-color hover:text-primary-color md:mr-6 p-[10px] md:py-4 px-6"
           role="button"
