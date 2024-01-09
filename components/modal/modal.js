@@ -415,6 +415,7 @@ function generateUniqueId() {
   return `${uniqueId}`
 }
 
+
 function addNewBoard(boardName, boardColumns) {
   const data = JSON.parse(localStorage.getItem('data'))
   const newData = data
@@ -430,12 +431,15 @@ function addNewBoard(boardName, boardColumns) {
 
   newData.boards.push(newBoard)
   localStorage.setItem('data', JSON.stringify(newData))
-  window.location.reload();
+  // getDataFromStorage()
+  reloadOnce()
 
   // Update your UI or trigger any necessary updates
   closeModal('add-new-board')
   renderBoard(currentData.selectedBoard) // Call renderBoard after adding a new board
 }
+
+
 const cancelButton = document.querySelector('.cancel')
 
 cancelButton.addEventListener('click', (e) => {

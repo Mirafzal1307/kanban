@@ -46,6 +46,34 @@ function reloadOnce() {
 
 const currentData = getDataFromStorage()
 
+document.addEventListener('DOMContentLoaded', function () {
+  const tripleDots = document.querySelector('.triple-dots')
+  const editDeleteList = document.querySelector('.edit-delete-list')
+  const toggleButton = document.querySelectorAll('.toggle-modal-button')
+  // Show or hide edit-delete-list on triple dots click
+  tripleDots.addEventListener('click', function (event) {
+    event.stopPropagation() // Prevents the click event from reaching the document
+
+    editDeleteList.classList.toggle('active')
+  })
+
+  // Hide edit-delete-list when clicking outside of it
+  document.addEventListener('click', function () {
+    editDeleteList.classList.remove('active')
+  })
+
+  // Prevent hiding when clicking inside the edit-delete-list
+  editDeleteList.addEventListener('click', function (event) {
+    event.stopPropagation()
+  })
+
+  toggleButton.forEach((button) => {
+    button.addEventListener('click', () => {
+      editDeleteList.classList.remove('active')
+    })
+  })
+})
+
 function getBoardName(boardId) {
   const selectedBoard = currentData.boards.find((board) => board.id === boardId)
 
@@ -497,7 +525,7 @@ function renderColumn(column) {
 
 // xotlik bor bu data localstoragega saalangandan keyin render qilishi kerak qaytadan
 function renderBoardsName(board) {
-  console.log( board );
+  console.log(board)
   return `
       <li>
         <button 
@@ -516,12 +544,6 @@ function renderBoardsName(board) {
 function generateBoardNames(currentData) {
   return currentData.boards.map((board) => renderBoardsName(board)).join('')
 }
-
-function addBoard() {
-  
-}
- 
-// console.log(generateBoardNames(currentData));
 
 function generateBoard(board) {
   if (!board || !board.columns) {
@@ -604,11 +626,7 @@ function generateColumnDataFromDOM() {
   return columns
 }
 
-function renderColumnsByActiveBoard(
-  currentData,
-  boardId,
-  newColumns,
-) {
+function renderColumnsByActiveBoard(currentData, boardId, newColumns) {
   const foundBoard = currentData.boards.find((board) => board.id === boardId)
 
   if (foundBoard) {
@@ -623,7 +641,7 @@ function saveDOM() {
   const currentBoard = document
     .querySelector('#playGround')
     .getAttribute('board-id')
-    renderColumnsByActiveBoard(
+  renderColumnsByActiveBoard(
     currentData,
     currentBoard,
     generateColumnDataFromDOM(),

@@ -86,24 +86,34 @@
           </div>
 
           <div class="flex items-center gap-4 md:gap-6">
-            <!-- ADD NEW TASK BUTTON -->
-            <button
-              modal-id="add-task-modal"
-              class="toggle-modal-button flex items-center whitespace-nowrap btn w-full rounded-full text-center font-plus-jakarta-sans font-bold cursor-pointer transition duration-200 ease-in-out text-[15px] focus:outline-none hover:bg-primary-light-color bg-primary-color text-white p-[10px] md:py-4 px-6"
-              role="button"
-            >
-              <span>+</span>
-              <span class="hidden md:inline-block">Add New Task</span>
-            </button>
-            <!-- TRIPLE DOTS -->
-            <button
-              modal-id="delete-board-modal"
-              class="delete-board toggle-modal-button font-bold text-white bg-danger-color hover:opacity-80 duration-100 rounded-full w-full p-4"
-            >
-              Delete Board
-            </button>
+             <!-- ADD NEW TASK BUTTON -->
+             <button
+             modal-id="add-task-modal"
+             class="toggle-modal-button btn w-full rounded-full text-center font-plus-jakarta-sans font-bold cursor-pointer transition duration-200 ease-in-out text-[15px] focus:outline-none hover:bg-primary-light-color bg-primary-color text-white md:mr-6 p-[10px] md:py-4 px-6"
+             role="button"
+           >
+             +
+             <span class="hidden md:inline-block">Add New Task</span>
+           </button>
+           <!-- TRIPLE DOTS -->
+             <div class="flex flex-col justify-center items-center">
+               <i class="icon-menu triple-dots cursor-pointer text-[#828FA3]"></i>
+
+             </div>
           </div>
         </div>
+        <ul class="edit-delete-list text-[20px] hidden w-[150px] absolute top-16 right-3   text-center font-bold h-24  flex-col gap-7  bg-page-color  z-[60] rounded-[10px] ">
+          <li class="cursor-pointer mt-1" >
+            <button class="toggle-modal-button text-[#828FA3]" modal-id="edit-board-modal">
+              Edit  board
+            </button>
+          </li>
+          <li class="cursor-pointer z-50 ">
+             <button class="toggle-modal-button text-red-500" modal-id="delete-board-modal">
+              Delete board
+               </button>
+              </li>
+        </ul>
       </header>
 
       <!-- MAIN -->
